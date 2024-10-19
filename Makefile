@@ -1,13 +1,13 @@
 CC = gcc
 CC_WIN = x86_64-w64-mingw32-gcc
 
-CFLAGS = -Wall -Wextra -Werror -lSDL2 -g3
-LIBS = -lSDL2 -L. -lft -lm -g3
+CFLAGS = -Wall -Wextra -Werror -lSDL2
+LIBS = -lSDL2 -L. -lm
 
 SDL2_INCLUDE = /home/agruet/SDL2-2.30.8/x86_64-w64-mingw32/include
 SDL2_LIB = /home/agruet/SDL2-2.30.8/x86_64-w64-mingw32/lib
 
-CFLAGS_WIN = -Wall -Wextra -Werror -fno-stack-protector -L. -lft_win -I$(SDL2_INCLUDE) -L$(SDL2_LIB) -lmingw32 -lSDL2main -lSDL2 -lSDL2main -mwindows -m64 -lm
+CFLAGS_WIN = -Wall -Wextra -Werror -fno-stack-protector -L. -I$(SDL2_INCLUDE) -L$(SDL2_LIB) -lmingw32 -lSDL2main -lSDL2 -mwindows -m64 -lm
 
 DIR = game_of_life_no_grid
 OBJ = $(DIR)/cells.o $(DIR)/game.o $(DIR)/utils.o $(DIR)/sdl.o

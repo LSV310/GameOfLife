@@ -6,19 +6,18 @@
 /*   By: agruet <agruet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 21:03:32 by agruet            #+#    #+#             */
-/*   Updated: 2024/10/18 16:40:38 by agruet           ###   ########.fr       */
+/*   Updated: 2024/10/19 11:08:16 by agruet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_GAME_OF_LIFE
-# define FT_GAME_OF_LIFE
+#ifndef GAME_OF_LIFE
+# define GAME_OF_LIFE
 
 # include <stdlib.h>
 # include <stdio.h>
 # include <unistd.h>
 # include <SDL2/SDL.h>
 # include <math.h>
-# include "../libft.h"
 
 typedef struct s_cell
 {
