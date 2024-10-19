@@ -6,7 +6,7 @@
 /*   By: agruet <agruet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 16:48:31 by agruet            #+#    #+#             */
-/*   Updated: 2024/10/19 10:26:59 by agruet           ###   ########.fr       */
+/*   Updated: 2024/10/19 11:11:44 by agruet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,7 +160,6 @@ int	main(int ac, char **av)
 						if (contains == 0)
 							tab_size++;
 
-						printf("1\n");
 						if (maximum_size / 10 <= tab_size / 10)
 						{
 							tab = realloc(tab, sizeof(t_cell *) * (tab_size / 10 * 10 + 10));
@@ -168,7 +167,6 @@ int	main(int ac, char **av)
 								return (1);
 						}
 
-						printf("2\n");
 						if (contains == 0)
 							tab[tab_size - 1] = new_cell;
 						else
@@ -176,7 +174,6 @@ int	main(int ac, char **av)
 							free(new_cell);
 							new_cell = NULL;
 						}
-						printf("3\n");
 					}
 					break;
 
@@ -207,25 +204,18 @@ int	main(int ac, char **av)
 
 				case SDL_KEYDOWN:
 					if (event.key.keysym.sym == SDLK_SPACE) {
-						printf("4\n");
 						tab = get_newtab(tab, tab_size);
-						printf("5\n");
 						if (tab)
 						{
-							printf("6\n");
 							tab_size = tab[0]->lenght;
 							if (tab_size > maximum_size)
 								maximum_size = tab_size;
-							printf("7\n");
 						}
 						else
 						{
-							printf("8\n");
 							tab = malloc(sizeof(t_cell *) * 10);
 							tab_size = 0;
-							printf("9\n");
 						}
-						printf("10\n");
 					}
 					break;
 			}
