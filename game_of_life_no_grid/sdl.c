@@ -6,13 +6,15 @@
 /*   By: agruet <agruet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 16:48:31 by agruet            #+#    #+#             */
-/*   Updated: 2024/10/25 13:49:18 by agruet           ###   ########.fr       */
+/*   Updated: 2024/10/25 18:20:56 by agruet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "game_of_life.h"
 
 #define INITIAL_CELL_SIZE 20
+#define WINDOW_WIDTH 800
+#define WINDOW_HEIGHT 600
 
 void	draw_grid(SDL_Renderer *renderer, int window_width, int window_height, float cell_size, float offset_x, float offset_y)
 {
@@ -43,15 +45,15 @@ void	draw_cell(SDL_Renderer *renderer, t_cell *cell, float cell_size, float offs
 
 int	main(int ac, char **av)
 {
-	(void)ac;
-	(void)av;
+	(void)ac, (void)av;
+
 	int	sdl = SDL_Init(SDL_INIT_VIDEO);
 	if (sdl) {
 		printf("Erreur SDL_Init: %s\n", SDL_GetError());
 		return (1);
 	}
 
-	int window_width = 800, window_height = 600;
+	int window_width = WINDOW_HEIGHT, window_height = WINDOW_HEIGHT;
 
 	SDL_Window *window = SDL_CreateWindow("Game Of Life",
 									SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
@@ -70,7 +72,8 @@ int	main(int ac, char **av)
 		return (1);
 	}
 
-	int enable_grid = 1; // Enable grid rendering
+	// Enable grid rendering
+	int enable_grid = 1;
 
 	// Variables for zoom and pan
 	float cell_size = INITIAL_CELL_SIZE;
@@ -78,6 +81,7 @@ int	main(int ac, char **av)
 	int mouse_pan = 0; // Pan active
 	int last_mouse_x = 0, last_mouse_y = 0; // Last mouse pos
 
+	// Create tab
 	int maximum_size = 10;
 	t_cell	**tab;
 	tab = malloc(sizeof(t_cell *) * maximum_size);
@@ -89,8 +93,7 @@ int	main(int ac, char **av)
 	int running = 1;
 	SDL_Event event;
 
-	while (running)
-	{
+	while (running) {
 		// Events management
 		while (SDL_PollEvent(&event)) {
 			switch (event.type) {
@@ -100,10 +103,8 @@ int	main(int ac, char **av)
 
 				case SDL_WINDOWEVENT: {
 					// Handle window resize
-					if (event.window.event == SDL_WINDOWEVENT_RESIZED) {
-						window_width = event.window.data1;
-						window_height = event.window.data2;
-					}
+					if (event.window.event == SDL_WINDOWEVENT_RESIZED)
+						window_width = event.window.data1, window_height = event.window.data2;
 					break;
 				}
 
@@ -117,15 +118,14 @@ int	main(int ac, char **av)
 					float grid_mouse_y = (mouse_y - offset_y) / cell_size;
 
 					// Change cells size with mouse wheel
-					if (event.wheel.y > 0) {
+					if (event.wheel.y > 0)
 						cell_size *= 1.1f; // Zoom In
-					} else if (event.wheel.y < 0) {
+					else if (event.wheel.y < 0)
 						cell_size *= 0.9f; // Zoom Out
-					}
 
 					// Limit min and max cells size
-					if (cell_size < 2) cell_size = 2;
-					if (cell_size > 100) cell_size = 100;
+					if (cell_size < 2) cell_size = 2; // Max zoom out
+					if (cell_size > 100) cell_size = 100; // Max zoom in
 
 					// Adjust offset to zoom in on mouse position
 					offset_x = mouse_x - grid_mouse_x * cell_size;
@@ -133,13 +133,13 @@ int	main(int ac, char **av)
 					break;
 				}
 
-				case SDL_MOUSEBUTTONUP:
-					if (event.button.button == SDL_BUTTON_LEFT) {
+				case SDL_MOUSEBUTTONUP: {
+					if (event.button.button == SDL_BUTTON_LEFT)
 						mouse_pan = 0; // Disable pan
-					}
 					break;
+				}
 
-				case SDL_MOUSEMOTION:
+				case SDL_MOUSEMOTION: {
 					if (mouse_pan) {
 						int mouse_x, mouse_y;
 						SDL_GetMouseState(&mouse_x, &mouse_y);
@@ -157,8 +157,9 @@ int	main(int ac, char **av)
 						last_mouse_y = mouse_y;
 					}
 					break;
+				}
 
-				case SDL_MOUSEBUTTONDOWN:
+				case SDL_MOUSEBUTTONDOWN: {
 					if (event.button.button == SDL_BUTTON_LEFT) {
 						mouse_pan = 1; // Turn pan on
 						SDL_GetMouseState(&last_mouse_x, &last_mouse_y);
@@ -187,25 +188,22 @@ int	main(int ac, char **av)
 						if (contains == 0)
 							tab_size++;
 
-						if (tab_size > maximum_size)
-						{
+						if (tab_size > maximum_size) {
 							maximum_size += 10;
 							tab = realloc(tab, sizeof(t_cell *) * maximum_size);
 							if (!tab)
-								return (1);
+								return (0);
 						}
 
 						if (contains == 0)
 							tab[tab_size - 1] = new_cell;
 						else
-						{
 							free(new_cell);
-							new_cell = NULL;
-						}
 					}
 					break;
+				}
 
-				case SDL_KEYDOWN:
+				case SDL_KEYDOWN: {
 					if (event.key.keysym.sym == SDLK_SPACE) {
 						tab = get_newtab(tab, tab_size);
 						if (tab)
@@ -223,6 +221,7 @@ int	main(int ac, char **av)
 					else if (event.key.keysym.sym == SDLK_g)
 						enable_grid = -enable_grid;
 					break;
+				}
 			}
 		}
 
@@ -230,13 +229,12 @@ int	main(int ac, char **av)
 		SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
 		SDL_RenderClear(renderer);
 
-		// Drawn grid
+		// Draw grid
 		if (enable_grid == 1)
 			draw_grid(renderer, window_width, window_height, cell_size, offset_x, offset_y);
 
 		// Draw cells
-		if (tab_size)
-		{
+		if (tab_size) {
 			int	i = 0;
 			while (i < tab_size)
 				draw_cell(renderer, tab[i++], cell_size, offset_x, offset_y);
