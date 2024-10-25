@@ -6,7 +6,7 @@
 /*   By: agruet <agruet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 16:48:31 by agruet            #+#    #+#             */
-/*   Updated: 2024/10/25 10:26:59 by agruet           ###   ########.fr       */
+/*   Updated: 2024/10/25 13:49:18 by agruet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 
 void	draw_grid(SDL_Renderer *renderer, int window_width, int window_height, float cell_size, float offset_x, float offset_y)
 {
-	SDL_SetRenderDrawColor(renderer, 30, 30, 30, SDL_ALPHA_OPAQUE);
+	SDL_SetRenderDrawColor(renderer, 20, 20, 20, SDL_ALPHA_OPAQUE);
 
 	for (float y = fmodf(offset_y, cell_size); y <= window_height; y += cell_size) {
 		SDL_RenderDrawLine(renderer, 0, y, window_width, y);
@@ -70,18 +70,20 @@ int	main(int ac, char **av)
 		return (1);
 	}
 
+	int enable_grid = 1; // Enable grid rendering
+
 	// Variables for zoom and pan
 	float cell_size = INITIAL_CELL_SIZE;
 	float offset_x = 0, offset_y = 0; // Pan offset
 	int mouse_pan = 0; // Pan active
 	int last_mouse_x = 0, last_mouse_y = 0; // Last mouse pos
 
+	int maximum_size = 10;
 	t_cell	**tab;
-	tab = malloc(sizeof(t_cell *) * 10);
+	tab = malloc(sizeof(t_cell *) * maximum_size);
 	if (!tab)
 		return (1);
-	int		tab_size = 0;
-	int		maximum_size = 0;
+	int tab_size = 0;
 
 	// Main loop
 	int running = 1;
@@ -122,7 +124,7 @@ int	main(int ac, char **av)
 					}
 
 					// Limit min and max cells size
-					if (cell_size < 5) cell_size = 5;
+					if (cell_size < 2) cell_size = 2;
 					if (cell_size > 100) cell_size = 100;
 
 					// Adjust offset to zoom in on mouse position
@@ -130,54 +132,6 @@ int	main(int ac, char **av)
 					offset_y = mouse_y - grid_mouse_y * cell_size;
 					break;
 				}
-
-				case SDL_MOUSEBUTTONDOWN:
-					if (event.button.button == SDL_BUTTON_LEFT) {
-						mouse_pan = 1; // Turn pan on
-						SDL_GetMouseState(&last_mouse_x, &last_mouse_y);
-					} else if (event.button.button == SDL_BUTTON_RIGHT) {
-						// Retrieve cell coordinates
-						int mouse_x, mouse_y;
-						SDL_GetMouseState(&mouse_x, &mouse_y);
-
-						// Calculate cell coordinates
-						int cell_x = (mouse_x - offset_x) / cell_size;
-						int cell_y = (mouse_y - offset_y) / cell_size;
-
-						// printf("Right clic on cell : (%d, %d)\n", cell_x, cell_y);
-
-						// Create a new t_cell at coords
-						t_cell	*new_cell;
-						new_cell = malloc(sizeof(t_cell));
-						if (!new_cell)
-							return (1);
-						new_cell->state = 1;
-						new_cell->x = cell_x;
-						new_cell->y = cell_y;
-
-						int	contains = 0;
-
-						if (tab && tab_size > 0)
-							contains = tab_contains_double(tab, new_cell, tab_size);
-						if (contains == 0)
-							tab_size++;
-
-						if (maximum_size / 10 <= tab_size / 10)
-						{
-							tab = realloc(tab, sizeof(t_cell *) * (tab_size / 10 * 10 + 10));
-							if (!tab)
-								return (1);
-						}
-
-						if (contains == 0)
-							tab[tab_size - 1] = new_cell;
-						else
-						{
-							free(new_cell);
-							new_cell = NULL;
-						}
-					}
-					break;
 
 				case SDL_MOUSEBUTTONUP:
 					if (event.button.button == SDL_BUTTON_LEFT) {
@@ -204,21 +158,70 @@ int	main(int ac, char **av)
 					}
 					break;
 
+				case SDL_MOUSEBUTTONDOWN:
+					if (event.button.button == SDL_BUTTON_LEFT) {
+						mouse_pan = 1; // Turn pan on
+						SDL_GetMouseState(&last_mouse_x, &last_mouse_y);
+					} else if (event.button.button == SDL_BUTTON_RIGHT) {
+						// Retrieve cell coordinates
+						int mouse_x, mouse_y;
+						SDL_GetMouseState(&mouse_x, &mouse_y);
+
+						// Calculate cell coordinates
+						int cell_x = (mouse_x - offset_x) / cell_size;
+						int cell_y = (mouse_y - offset_y) / cell_size;
+
+						// Create a new t_cell at coords
+						t_cell	*new_cell;
+						new_cell = malloc(sizeof(t_cell));
+						if (!new_cell)
+							return (1);
+						new_cell->state = 1;
+						new_cell->x = cell_x;
+						new_cell->y = cell_y;
+
+						int	contains = 0;
+
+						if (tab && tab_size > 0)
+							contains = tab_contains_double(tab, new_cell, tab_size);
+						if (contains == 0)
+							tab_size++;
+
+						if (tab_size > maximum_size)
+						{
+							maximum_size += 10;
+							tab = realloc(tab, sizeof(t_cell *) * maximum_size);
+							if (!tab)
+								return (1);
+						}
+
+						if (contains == 0)
+							tab[tab_size - 1] = new_cell;
+						else
+						{
+							free(new_cell);
+							new_cell = NULL;
+						}
+					}
+					break;
+
 				case SDL_KEYDOWN:
 					if (event.key.keysym.sym == SDLK_SPACE) {
 						tab = get_newtab(tab, tab_size);
 						if (tab)
 						{
 							tab_size = tab[0]->lenght;
-							if (tab_size > maximum_size)
-								maximum_size = tab_size;
+							maximum_size = tab_size / 10 * 10 + 10;
 						}
 						else
 						{
 							tab = malloc(sizeof(t_cell *) * 10);
 							tab_size = 0;
+							maximum_size = 10;
 						}
 					}
+					else if (event.key.keysym.sym == SDLK_g)
+						enable_grid = -enable_grid;
 					break;
 			}
 		}
@@ -228,7 +231,8 @@ int	main(int ac, char **av)
 		SDL_RenderClear(renderer);
 
 		// Drawn grid
-		draw_grid(renderer, window_width, window_height, cell_size, offset_x, offset_y);
+		if (enable_grid == 1)
+			draw_grid(renderer, window_width, window_height, cell_size, offset_x, offset_y);
 
 		// Draw cells
 		if (tab_size)

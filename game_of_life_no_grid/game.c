@@ -50,7 +50,7 @@ t_cell	**verify_tab(t_cell **calc, int calc_size, t_cell **newtab, int new_size)
 	count = 0;
 	while (i < calc_size)
 		count += verify_cell(calc[i++], newtab, new_size);
-	result = malloc(sizeof(t_cell *) * (count));
+	result = malloc(sizeof(t_cell *) * (count / 10 * 10 + 10));
 	if (!result || !count)
 	{
 		if (!count)
