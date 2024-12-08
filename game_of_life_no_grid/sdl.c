@@ -6,7 +6,7 @@
 /*   By: agruet <agruet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 16:48:31 by agruet            #+#    #+#             */
-/*   Updated: 2024/12/08 10:51:32 by agruet           ###   ########.fr       */
+/*   Updated: 2024/12/08 11:51:50 by agruet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,15 @@ void	draw_cell(SDL_Renderer *renderer, t_cell *cell, float cell_size, float offs
 
 int	main(int ac, char **av)
 {
-	(void)ac, (void)av;
+	// 0: Game Of Life
+	// 1: High Life
+	int game = 0;
+
+	if (ac > 1)
+	{
+		if (strcmp(av[1], "hl") == 0)
+			game = 1;
+	}
 
 	int	sdl = SDL_Init(SDL_INIT_VIDEO);
 	if (sdl) {
@@ -205,7 +213,7 @@ int	main(int ac, char **av)
 
 				case SDL_KEYDOWN: {
 					if (event.key.keysym.sym == SDLK_SPACE) {
-						tab = get_newtab(tab, tab_size);
+						tab = get_newtab(tab, tab_size, game);
 						if (tab)
 						{
 							tab_size = tab[0]->lenght;

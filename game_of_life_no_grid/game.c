@@ -12,7 +12,7 @@
 
 #include "game_of_life.h"
 
-int	fill_result(t_cell **result, t_cell **calc, int calc_size, t_cell **newtab, int new_size)
+int	fill_result(t_cell **result, t_cell **calc, int calc_size, t_cell **newtab, int new_size, int (*vc)(t_cell *, t_cell **, int))
 {
 	int	i;
 	int	j;
@@ -21,7 +21,7 @@ int	fill_result(t_cell **result, t_cell **calc, int calc_size, t_cell **newtab, 
 	j = 0;
 	while (i < calc_size)
 	{
-		if (verify_cell_gol(calc[i], newtab, new_size))
+		if ((*vc)(calc[i], newtab, new_size))
 		{
 			t_cell	*new_cell;
 			new_cell = malloc(sizeof(t_cell));
@@ -39,7 +39,7 @@ int	fill_result(t_cell **result, t_cell **calc, int calc_size, t_cell **newtab, 
 	return (j);
 }
 
-t_cell	**verify_tab(t_cell **calc, int calc_size, t_cell **newtab, int new_size)
+t_cell	**verify_tab(t_cell **calc, int calc_size, t_cell **newtab, int new_size, int (*vc)(t_cell *, t_cell **, int))
 {
 	int		i;
 	int		count;
@@ -49,7 +49,7 @@ t_cell	**verify_tab(t_cell **calc, int calc_size, t_cell **newtab, int new_size)
 	i = 0;
 	count = 0;
 	while (i < calc_size)
-		count += verify_cell_gol(calc[i++], newtab, new_size);
+		count += (*vc)(calc[i++], newtab, new_size);
 	result = malloc(sizeof(t_cell *) * (count / 10 * 10 + 10));
 	if (!result || !count)
 	{
@@ -59,7 +59,7 @@ t_cell	**verify_tab(t_cell **calc, int calc_size, t_cell **newtab, int new_size)
 		free_tab(calc, calc_size);
 		return (NULL);
 	}
-	res_size = fill_result(result, calc, calc_size, newtab, new_size);
+	res_size = fill_result(result, calc, calc_size, newtab, new_size, (*vc));
 	free_tab(calc, calc_size);
 	free_tab(newtab, new_size);
 	if (res_size)
@@ -68,7 +68,7 @@ t_cell	**verify_tab(t_cell **calc, int calc_size, t_cell **newtab, int new_size)
 	return (NULL);
 }
 
-t_cell	**get_newtab(t_cell **tab, int new_size)
+t_cell	**get_newtab(t_cell **tab, int new_size, int game)
 {
 	t_cell	**newtab;
 	int		i;
@@ -94,5 +94,5 @@ t_cell	**get_newtab(t_cell **tab, int new_size)
 			free(tab[j]);
 		j++;
 	}
-	return (add_neighbors(newtab, i));
+	return (add_neighbors(newtab, i, game));
 }

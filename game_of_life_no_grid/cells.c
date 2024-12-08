@@ -6,7 +6,7 @@
 /*   By: agruet <agruet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 17:44:19 by agruet            #+#    #+#             */
-/*   Updated: 2024/10/25 22:07:52 by agruet           ###   ########.fr       */
+/*   Updated: 2024/12/08 11:59:46 by agruet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	add_cell(t_cell **calc, int x, int y, int *i, t_cell **newtab, int new_size
 	}
 }
 
-t_cell	**add_neighbors(t_cell **newtab, int new_size)
+t_cell	**add_neighbors(t_cell **newtab, int new_size, int game)
 {
 	int		i;
 	int		j;
@@ -55,7 +55,10 @@ t_cell	**add_neighbors(t_cell **newtab, int new_size)
 		add_cell(calc, newtab[i]->x - 1, newtab[i]->y + 1, &j, newtab, new_size);
 		i++;
 	}
-	return (verify_tab(calc, j, newtab, new_size));
+	if (game == 0)
+		return (verify_tab(calc, j, newtab, new_size, &verify_cell_gol));
+	else
+		return (verify_tab(calc, j, newtab, new_size, &verify_cell_hl));
 }
 
 int	neighbor_count(t_cell **newtab, int size, int x, int y)
