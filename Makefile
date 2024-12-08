@@ -15,13 +15,20 @@ OBJ_WIN = $(DIR)/win_win.o $(DIR)/cells_win.o $(DIR)/game_win.o $(DIR)/utils_win
 NAME = GameOfLife
 NAME_WIN = GameOfLife.exe
 
+RC = x86_64-w64-mingw32-windres
+RES_FILE = resource.rc
+RES_OBJ = resource.o
+
 all: $(NAME)
 
 $(NAME): $(OBJ)
 	$(CC) -o $(NAME) $(OBJ) $(LIBS)
 
-exe: $(OBJ_WIN)
-	$(CC_WIN) -o $(NAME_WIN) $(OBJ_WIN) $(CFLAGS_WIN)
+exe: $(OBJ_WIN) $(RES_OBJ)
+	$(CC_WIN) -o $(NAME_WIN) $(OBJ_WIN) $(RES_OBJ) $(CFLAGS_WIN)
+
+$(RES_OBJ): $(RES_FILE)
+	$(RC) $(RES_FILE) -o $(RES_OBJ)
 
 %_win.o: %.c
 	$(CC_WIN) $(CFLAGS_WIN) -c $< -o $@
@@ -30,11 +37,11 @@ exe: $(OBJ_WIN)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(OBJ) $(OBJ_WIN)
+	rm -f $(OBJ) $(OBJ_WIN) $(RES_OBJ)
 
 fclean: clean
 	rm -f $(NAME) $(NAME_WIN)
 
 re: fclean all
 
-.PHONY: all clean fclean re exe
+.PHONY: all exe clean fclean re
