@@ -6,7 +6,7 @@
 /*   By: agruet <agruet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 16:48:31 by agruet            #+#    #+#             */
-/*   Updated: 2024/12/08 11:51:50 by agruet           ###   ########.fr       */
+/*   Updated: 2024/12/08 12:18:58 by agruet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,9 +105,11 @@ int	main(int ac, char **av)
 		// Events management
 		while (SDL_PollEvent(&event)) {
 			switch (event.type) {
-				case SDL_QUIT:
+				case SDL_QUIT: {
 					running = 0;
+					free_tab(tab, tab_size);
 					break;
+				}
 
 				case SDL_WINDOWEVENT: {
 					// Handle window resize
@@ -228,6 +230,13 @@ int	main(int ac, char **av)
 					}
 					else if (event.key.keysym.sym == SDLK_g)
 						enable_grid = -enable_grid;
+					else if (event.key.keysym.sym == SDLK_c)
+					{
+						free_tab(tab, tab_size);
+						tab = malloc(sizeof(t_cell *) * 10);
+						tab_size = 0;
+						maximum_size = 10;
+					}
 					break;
 				}
 			}

@@ -6,7 +6,7 @@
 /*   By: agruet <agruet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 17:37:42 by agruet            #+#    #+#             */
-/*   Updated: 2024/10/18 17:53:16 by agruet           ###   ########.fr       */
+/*   Updated: 2024/12/08 12:12:50 by agruet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ void	free_tab(t_cell **tab, int size)
 	int	i;
 
 	i = 0;
+	if (!tab)
+		return ;
 	while (i < size)
 		free(tab[i++]);
 	free(tab);
