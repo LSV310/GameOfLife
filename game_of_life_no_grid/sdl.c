@@ -6,7 +6,7 @@
 /*   By: agruet <agruet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 16:48:31 by agruet            #+#    #+#             */
-/*   Updated: 2024/10/25 18:20:56 by agruet           ###   ########.fr       */
+/*   Updated: 2024/12/08 10:51:32 by agruet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 
 void	draw_grid(SDL_Renderer *renderer, int window_width, int window_height, float cell_size, float offset_x, float offset_y)
 {
-	SDL_SetRenderDrawColor(renderer, 20, 20, 20, SDL_ALPHA_OPAQUE);
+	SDL_SetRenderDrawColor(renderer, 50, 50, 50, SDL_ALPHA_OPAQUE);
 
 	for (float y = fmodf(offset_y, cell_size); y <= window_height; y += cell_size) {
 		SDL_RenderDrawLine(renderer, 0, y, window_width, y);
@@ -72,9 +72,6 @@ int	main(int ac, char **av)
 		return (1);
 	}
 
-	// Enable grid rendering
-	int enable_grid = 1;
-
 	// Variables for zoom and pan
 	float cell_size = INITIAL_CELL_SIZE;
 	float offset_x = 0, offset_y = 0; // Pan offset
@@ -88,6 +85,9 @@ int	main(int ac, char **av)
 	if (!tab)
 		return (1);
 	int tab_size = 0;
+
+	// Enable grid rendering
+	int enable_grid = 1;
 
 	// Main loop
 	int running = 1;
@@ -226,7 +226,7 @@ int	main(int ac, char **av)
 		}
 
 		// Black out
-		SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+		SDL_SetRenderDrawColor(renderer, 15, 15, 15, SDL_ALPHA_OPAQUE);
 		SDL_RenderClear(renderer);
 
 		// Draw grid
