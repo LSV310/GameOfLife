@@ -21,7 +21,7 @@ int	fill_result(t_cell **result, t_cell **calc, int calc_size, t_cell **newtab, 
 	j = 0;
 	while (i < calc_size)
 	{
-		if (verify_cell(calc[i], newtab, new_size))
+		if (verify_cell_gol(calc[i], newtab, new_size))
 		{
 			t_cell	*new_cell;
 			new_cell = malloc(sizeof(t_cell));
@@ -49,7 +49,7 @@ t_cell	**verify_tab(t_cell **calc, int calc_size, t_cell **newtab, int new_size)
 	i = 0;
 	count = 0;
 	while (i < calc_size)
-		count += verify_cell(calc[i++], newtab, new_size);
+		count += verify_cell_gol(calc[i++], newtab, new_size);
 	result = malloc(sizeof(t_cell *) * (count / 10 * 10 + 10));
 	if (!result || !count)
 	{

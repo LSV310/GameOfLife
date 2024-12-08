@@ -6,7 +6,7 @@
 /*   By: agruet <agruet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 17:44:19 by agruet            #+#    #+#             */
-/*   Updated: 2024/10/18 17:53:21 by agruet           ###   ########.fr       */
+/*   Updated: 2024/10/25 22:07:52 by agruet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,8 @@ int	neighbor_count(t_cell **newtab, int size, int x, int y)
 	return (i);
 }
 
-int	verify_cell(t_cell *calc, t_cell **newtab, int new_size)
+// Function for the Game Of Life
+int	verify_cell_gol(t_cell *calc, t_cell **newtab, int new_size)
 {
 	int	count;
 
@@ -94,4 +95,18 @@ int	verify_cell(t_cell *calc, t_cell **newtab, int new_size)
 	if (count < 2 || count > 3)
 		return (0);
 	return (0);
+}
+
+// Function for High Life
+int	verify_cell_hl(t_cell *calc, t_cell **newtab, int new_size)
+{
+	int	count;
+
+	count = neighbor_count(newtab, new_size, calc->x, calc->y);
+	if (count == 3 || count == 6)
+		return (1);
+	else if (count == 2)
+		return (calc->state);
+	else
+		return (0);
 }
