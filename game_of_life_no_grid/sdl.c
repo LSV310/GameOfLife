@@ -6,7 +6,7 @@
 /*   By: agruet <agruet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 16:48:31 by agruet            #+#    #+#             */
-/*   Updated: 2024/12/08 12:18:58 by agruet           ###   ########.fr       */
+/*   Updated: 2025/01/05 17:48:07 by agruet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,8 @@ int	main(int ac, char **av)
 				case SDL_QUIT: {
 					running = 0;
 					free_tab(tab, tab_size);
+					tab = NULL;
+					tab_size = 0;
 					break;
 				}
 

@@ -6,7 +6,7 @@
 /*   By: agruet <agruet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 17:44:19 by agruet            #+#    #+#             */
-/*   Updated: 2024/12/08 11:59:46 by agruet           ###   ########.fr       */
+/*   Updated: 2025/01/05 17:20:04 by agruet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ int	verify_cell_hl(t_cell *calc, t_cell **newtab, int new_size)
 	int	count;
 
 	count = neighbor_count(newtab, new_size, calc->x, calc->y);
-	if (count == 3 || count == 6)
+	if (count == 3 || (count == 6 && calc->state == 0))
 		return (1);
 	else if (count == 2)
 		return (calc->state);
