@@ -6,7 +6,7 @@ LIBS = -lSDL2 -L. -lm
 
 SDL2_PATH = /home/agruet/SDL2-2.30.8/x86_64-w64-mingw32
 
-CFLAGS_WIN = -Wall -Wextra -Werror -L. -I$(SDL2_PATH)/include -L$(SDL2_PATH)/lib -lmingw32 -lSDL2main -lSDL2 -mwindows -m64 -lm
+CFLAGS_WIN = -Wall -Wextra -Werror -L. -I$(SDL2_PATH)/include -L$(SDL2_PATH)/lib -lmingw32 -lSDL2main -lSDL2 -mwindows -m64 -lm #-static -lwinmm -lole32 -luuid -lcomdlg32 -lversion
 
 DIR = game_of_life_no_grid
 OBJ = $(DIR)/cells.o $(DIR)/game.o $(DIR)/utils.o $(DIR)/sdl.o
